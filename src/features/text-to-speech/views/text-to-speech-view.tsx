@@ -19,31 +19,31 @@ export function TextToSpeechView({
   initialValues?: Partial<TTSFormValues>;
 }) {
   const trpc = useTRPC();
-  // const { 
-  //   data: voices,
-  // } = useSuspenseQuery(trpc.voices.getAll.queryOptions());
+  const { 
+    data: voices,
+  } = useSuspenseQuery(trpc.voices.getAll.queryOptions());
 
-  // const { custom: customVoices, system: systemVoices } = voices;
+  const { custom: customVoices, system: systemVoices } = voices;
 
-  // const allVoices = [...customVoices, ...systemVoices];
-  // const fallbackVoiceId = allVoices[0]?.id ?? "";
+  const allVoices = [...customVoices, ...systemVoices];
+  const fallbackVoiceId = allVoices[0]?.id ?? "";
 
-  // // Requested voice may no longer exist (deleted); fall back to first available
-  // const resolvedVoiceId =
-  //   initialValues?.voiceId &&
-  //   allVoices.some((v) => v.id === initialValues.voiceId)
-  //     ? initialValues.voiceId
-  //     : fallbackVoiceId;
+  // Requested voice may no longer exist (deleted); fall back to first available
+  const resolvedVoiceId =
+    initialValues?.voiceId &&
+    allVoices.some((v) => v.id === initialValues.voiceId)
+      ? initialValues.voiceId
+      : fallbackVoiceId;
 
-  // const defaultValues: TTSFormValues = {
-  //   ...defaultTTSValues,
-  //   ...initialValues,
-  //   voiceId: resolvedVoiceId,
-  // };
+  const defaultValues: TTSFormValues = {
+    ...defaultTTSValues,
+    ...initialValues,
+    voiceId: resolvedVoiceId,
+  };
 
   return (
-    // <TTSVoicesProvider value={{ customVoices, systemVoices, allVoices }}>
-      <TextToSpeechForm defaultValues={defaultTTSValues}>
+    <TTSVoicesProvider value={{ customVoices, systemVoices, allVoices }}>
+      <TextToSpeechForm defaultValues={defaultValues}>
         <div className="flex min-h-0 flex-1 overflow-hidden">
           <div className="flex min-h-0 flex-1 flex-col">
             <TextInputPanel />
@@ -52,6 +52,6 @@ export function TextToSpeechView({
           <SettingsPanel />
         </div>
       </TextToSpeechForm>
-    // </TTSVoicesProvider>
+     </TTSVoicesProvider>
   );
 };
