@@ -1,4 +1,9 @@
+import { Metadata } from "next";
 import { OrganizationList } from "@clerk/nextjs";
+
+export const metadata: Metadata = {
+  title: "Organization Selection",
+};
 
 export default function OrgSelectionPage() {
   return (
