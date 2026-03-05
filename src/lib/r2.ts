@@ -8,11 +8,11 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { env } from "./env";
 
 const r2 = new S3Client({
-  region: "auto",
-  endpoint: `https://${env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+  region: process.env.R2_REGION,
+  endpoint: process.env.R2_ENDPOINT,
   credentials: {
-    accessKeyId: env.R2_ACCESS_KEY_ID,
-    secretAccessKey: env.R2_SECRET_ACCESS_KEY,
+    accessKeyId: process.env.R2_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
   },
 });
 
@@ -36,7 +36,6 @@ export async function uploadAudio({
     }),
   );
 }
-
 export async function deleteAudio(key: string): Promise<void> {
   await r2.send(
     new DeleteObjectCommand({
