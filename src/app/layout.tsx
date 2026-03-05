@@ -4,7 +4,7 @@ import "./globals.css";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { Toaster } from "@/components/ui/sonner";
 import { ClerkProvider } from "@clerk/nextjs";
-// import { TRPCReactProvider } from "@/trpc/client";
+import { TRPCReactProvider } from "@/trpc/client";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -37,12 +37,16 @@ export default function RootLayout({
         },
       }}
     >
-      <html lang="en">
-        <body className={`${inter.variable} ${geistMono.variable} antialiased`}>
-          <NuqsAdapter>{children}</NuqsAdapter>
-          <Toaster />
-        </body>
-      </html>
+      <TRPCReactProvider>
+        <html lang="en">
+          <body
+            className={`${inter.variable} ${geistMono.variable} antialiased`}
+          >
+            <NuqsAdapter>{children}</NuqsAdapter>
+            <Toaster />
+          </body>
+        </html>
+      </TRPCReactProvider>
     </ClerkProvider>
   );
 }

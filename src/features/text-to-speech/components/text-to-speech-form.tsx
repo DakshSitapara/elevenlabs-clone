@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { formOptions } from "@tanstack/react-form";
 // import { useMutation } from "@tanstack/react-query";
 
-// import { useTRPC } from "@/trpc/client";
+import { useTRPC } from "@/trpc/client";
 import { useAppForm } from "@/hooks/use-app-form";
 // import { useCheckout } from "@/features/billing/hooks/use-checkout";
 
@@ -41,7 +41,7 @@ export function TextToSpeechForm({
   children: React.ReactNode;
   defaultValues?: TTSFormValues;
 }) {
-//   const trpc = useTRPC();
+  const trpc = useTRPC();
   const router = useRouter();
 //   const createMutation = useMutation(
 //     trpc.generations.create.mutationOptions({}),
