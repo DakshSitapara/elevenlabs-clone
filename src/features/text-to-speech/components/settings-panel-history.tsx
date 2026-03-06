@@ -1,6 +1,6 @@
 "use client";
 
-// import { VoiceAvatar } from "@/components/voice-avatar/voice-avatar";
+import { VoiceAvatar } from "@/components/voice-avatar/voice-avatar";
 import { useTRPC } from "@/trpc/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
@@ -8,17 +8,16 @@ import { AudioLines, AudioWaveform, Clock } from "lucide-react";
 import Link from "next/link";
 
 export function SettingsPanelHistory() {
-//   const trpc = useTRPC();
+  const trpc = useTRPC();
 
-//   const { data: generations } = useSuspenseQuery(
-//     trpc.generations.getAll.queryOptions(),
-//   );
+  const { data: generations } = useSuspenseQuery(
+    trpc.generations.getAll.queryOptions(),
+  );
 
-  if (true) {
+  if (!generations.length) {
     return (
       <div className="flex h-full flex-col items-center justify-center gap-2 p-8">
         <div className="relative flex w-25 items-center justify-center">
-
           <div className="absolute left-0 -rotate-30 rounded-full bg-muted p-3">
             <AudioLines className="size-4 text-muted-foreground" />
           </div>
@@ -30,7 +29,6 @@ export function SettingsPanelHistory() {
           <div className="absolute right-0 rotate-30 rounded-full bg-muted p-3">
             <Clock className="size-4 text-muted-foreground" />
           </div>
-
         </div>
         <p className="font-semibold tracking-tight text-foreground">
           No generations yet
@@ -44,7 +42,7 @@ export function SettingsPanelHistory() {
 
   return (
     <div className="flex flex-col gap-1 p-2">
-      {/* {generations.map((generation) => (
+      {generations.map((generation) => (
         <Link
           href={`/text-to-speech/${generation.id}`}
           key={generation.id}
@@ -63,17 +61,14 @@ export function SettingsPanelHistory() {
               <span>{generation.voiceName}</span>
               <span>&middot;</span>
               <span>
-                {formatDistanceToNow(
-                  new Date(generation.createdAt),
-                  {
-                    addSuffix: true,
-                  },
-                )}
+                {formatDistanceToNow(new Date(generation.createdAt), {
+                  addSuffix: true,
+                })}
               </span>
             </div>
           </div>
         </Link>
-      ))} */}
+      ))}
     </div>
-  )
-};
+  );
+}
