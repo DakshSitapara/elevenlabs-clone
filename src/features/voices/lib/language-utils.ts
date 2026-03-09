@@ -10,6 +10,12 @@ export type ParsedLanguage = {
 
 const languageCache = new Map<string, ParsedLanguage>();
 
+function getFlag(country: string) {
+  return [...country]
+    .map((c) => String.fromCodePoint(0x1f1e6 + c.charCodeAt(0) - 65))
+    .join("");
+}
+
 export function parseLanguage(locale: string): ParsedLanguage {
   if (languageCache.has(locale)) {
     return languageCache.get(locale)!;
@@ -18,7 +24,9 @@ export function parseLanguage(locale: string): ParsedLanguage {
   let result: ParsedLanguage;
 
   try {
-    const [lang, country] = locale.split("-");
+    const parts = locale.split("-");
+    const lang = parts[0];
+    const country = parts[1];
 
     const language = languageNames.of(lang) ?? lang;
 
@@ -27,14 +35,12 @@ export function parseLanguage(locale: string): ParsedLanguage {
         flag: "",
         language,
         region: "",
-        label: language,
+        label: `${language} (${locale})`,
       };
     } else {
       const upper = country.toUpperCase();
 
-      const flag = [...upper]
-        .map((c) => String.fromCodePoint(0x1f1e6 + c.charCodeAt(0) - 65))
-        .join("");
+      const flag = getFlag(upper);
 
       const region = regionNames.of(upper) ?? upper;
 

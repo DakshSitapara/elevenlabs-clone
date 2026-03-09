@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
 import { useForm } from "@tanstack/react-form";
@@ -191,7 +191,10 @@ function LanguageCombobox({
 }) {
   const [open, setOpen] = useState(false);
 
-  const selected = LANGUAGE_OPTIONS.find((l) => l.value === value);
+  const selected = useMemo(
+    () => LANGUAGE_OPTIONS.find((l) => l.value === value),
+    [value],
+  );
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -210,8 +213,14 @@ function LanguageCombobox({
           <div className="flex items-center gap-2 truncate">
             {value ? (
               <>
-                <span>{selected?.flag}</span>
-                {selected?.label}
+                <span className="shrink-0">
+                  {selected?.flag ? (
+                    <span>{selected.flag}</span>
+                  ) : (
+                    <Globe className="size-4 shrink-0 text-muted-foreground" />
+                  )}
+                </span>
+                <span>{selected?.label}</span>
               </>
             ) : (
               <>
@@ -232,14 +241,20 @@ function LanguageCombobox({
               {LANGUAGE_OPTIONS.map((lang) => (
                 <CommandItem
                   key={lang.value}
-                  value={lang.label}
+                  value={`${lang.label} ${lang.value}`}
                   onSelect={() => {
                     onChange(lang.value);
                     setOpen(false);
                   }}
                   className="flex items-center gap-2"
                 >
-                  <span>{lang.flag}</span>
+                  <span>
+                    {lang.flag ? (
+                      <span>{lang.flag}</span>
+                    ) : (
+                      <Globe className="size-4 shrink-0 text-muted-foreground" />
+                    )}
+                  </span>
 
                   <span className="flex-1">{lang.label}</span>
 
