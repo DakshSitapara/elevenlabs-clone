@@ -27,7 +27,8 @@ import type { AppRouter } from "@/trpc/routers/_app";
 import { VOICE_CATEGORY_LABELS } from "@/features/voices/data/voice-categories";
 import { useAudioPlayback } from "@/hooks/use-audio-playback";
 import { useTRPC } from "@/trpc/client";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { parseLanguage } from "../lib/language-utils";
 
 export type VoiceItem =
   inferRouterOutputs<AppRouter>["voices"]["getAll"]["custom"][number];
@@ -36,24 +37,12 @@ interface VoiceCardProps {
   voice: VoiceItem;
 }
 
-const regionNames = new Intl.DisplayNames(["en"], { type: "region" });
-
-function parseLanguage(locale: string) {
-  const [, country] = locale.split("-");
-  if (!country) return { flag: "", region: locale };
-
-  const flag = [...country.toUpperCase()]
-    .map((c) => String.fromCodePoint(0x1f1e6 + c.charCodeAt(0) - 65))
-    .join("");
-
-  const region = regionNames.of(country) ?? country;
-
-  return { flag, region };
-}
-
 export function VoiceCard({ voice }: VoiceCardProps) {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const { flag, region } = parseLanguage(voice.language);
+  const { flag, label } = useMemo(
+    () => parseLanguage(voice.language),
+    [voice.language],
+  );
 
   const audioSrc = `/api/voices/${encodeURIComponent(voice.id)}`;
   const { isPlaying, isLoading, togglePlay } = useAudioPlayback(audioSrc);
@@ -102,8 +91,8 @@ export function VoiceCard({ voice }: VoiceCardProps) {
         </p>
 
         <p className="flex items-center gap-1 text-xs">
-          <span className="shrink-0">{flag}</span>
-          <span className="truncate font-medium">{region}</span>
+          {flag && <span className="shrink-0">{flag}</span>}
+          <span className="truncate font-medium">{label}</span>
         </p>
       </div>
 

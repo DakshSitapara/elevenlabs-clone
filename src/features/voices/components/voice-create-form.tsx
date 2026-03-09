@@ -58,13 +58,20 @@ import {
   VOICE_CATEGORY_LABELS,
 } from "@/features/voices/data/voice-categories";
 import { VoiceRecorder } from "./voice-recorder";
+import { parseLanguage } from "../lib/language-utils";
 
 const LANGUAGE_OPTIONS = locales.all
   .filter((l) => l.tag && l.tag.includes("-") && l.name)
-  .map((l) => ({
-    value: l.tag,
-    label: l.location ? `${l.name} (${l.location})` : l.name,
-  }));
+  .map((l) => {
+    const { flag, label } = parseLanguage(l.tag);
+
+    return {
+      value: l.tag,
+      label,
+      flag,
+    };
+  })
+  .sort((a, b) => a.label.localeCompare(b.label));
 
 const voiceCreateFormSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -184,8 +191,7 @@ function LanguageCombobox({
 }) {
   const [open, setOpen] = useState(false);
 
-  const selectedLabel =
-    LANGUAGE_OPTIONS.find((l) => l.value === value)?.label ?? "";
+  const selected = LANGUAGE_OPTIONS.find((l) => l.value === value);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -202,8 +208,17 @@ function LanguageCombobox({
           )}
         >
           <div className="flex items-center gap-2 truncate">
-            <Globe className="size-4 shrink-0 text-muted-foreground" />
-            {value ? selectedLabel : "Select language..."}
+            {value ? (
+              <>
+                <span>{selected?.flag}</span>
+                {selected?.label}
+              </>
+            ) : (
+              <>
+                <Globe className="size-4 shrink-0 text-muted-foreground" />
+                Select language...
+              </>
+            )}
           </div>
           <ChevronsUpDown className="size-4 shrink-0 opacity-50" />
         </Button>
@@ -222,8 +237,12 @@ function LanguageCombobox({
                     onChange(lang.value);
                     setOpen(false);
                   }}
+                  className="flex items-center gap-2"
                 >
-                  {lang.label}
+                  <span>{lang.flag}</span>
+
+                  <span className="flex-1">{lang.label}</span>
+
                   <Check
                     className={cn(
                       "ml-auto size-4",
