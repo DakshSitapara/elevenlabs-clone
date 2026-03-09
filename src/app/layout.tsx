@@ -22,6 +22,20 @@ export const metadata: Metadata = {
     template: "%s | ElevenLabs Clone",
   },
   description: "AI-powered text-to-speech and voice cloning platform",
+  icons: {
+    icon: [
+      {
+        media: "(prefers-color-scheme: light)",
+        url: "/logo.svg",
+        href: "/logo.svg",
+      },
+      {
+        media: "(prefers-color-scheme: dark)",
+        url: "/logo-dark.svg",
+        href: "/logo-dark.svg",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
