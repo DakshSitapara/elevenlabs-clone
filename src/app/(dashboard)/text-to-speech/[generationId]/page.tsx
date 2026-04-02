@@ -1,4 +1,4 @@
-import { TextToSpeechDetailView } from "@/features/text-to-speech/views//text-to-speech-detail-view";
+import { TextToSpeechDetailView } from "@/features/text-to-speech/views/text-to-speech-detail-view";
 import { trpc, HydrateClient, prefetch } from "@/trpc/server";
 
 export default async function TextToSpeechDetailPage({
